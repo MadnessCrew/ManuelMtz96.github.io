@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Regio Instruments</title>
+<style>
+:root{--thumb:20px;--mono:"SF Mono",monospace;--ink:#e8fff8;--ink-soft:#c8efe6;--brand:#a3f0e1;--bg-1:#0b3b32;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:var(--mono);color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 10% 0%,#073a57 0%,#032a3d 40%) no-repeat,
+    radial-gradient(900px 500px at 90% 10%,#0a5a4d 0%,#0b3b32 50%) no-repeat,
+    var(--bg-1);
+}
+.wrap{max-width:960px;margin:0 auto;padding:24px 20px}
+.card{
+  background:rgba(5,30,40,.6);border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;padding:16px;
+  box-shadow:0 10px 30px rgba(0,255,190,.12);backdrop-filter:blur(6px);
+}
+.section-title,.brand{margin:0 0 10px;font-weight:700;color:var(--brand);}
+.section-title{font-size:clamp(22px,3.5vw,28px);letter-spacing:.3px;}
+.brand{font-size:clamp(32px,6vw,56px);letter-spacing:.5px;color:#a3f0e1;}
+
+.hero{min-height:84vh;display:grid;place-items:center;padding:40px 20px;}
+.hero-inner{
+  max-width:960px;width:100%;text-align:center;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.10);border-radius:22px;padding:28px 24px 32px;
+  box-shadow:0 30px 80px rgba(0,0,0,.35);backdrop-filter:blur(8px);
+}
+.tag{font-size:clamp(16px,2.5vw,18px);color:var(--ink-soft);max-width:820px;margin:0 auto 22px;line-height:1.6;}
+.cta{
+  display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.18);background:linear-gradient(90deg,#59d3c3,#7ae3b1);
+  color:#063c35;font-weight:800;text-decoration:none;box-shadow:0 12px 30px rgba(0,255,190,.2);
+  transition:transform .08s,box-shadow .2s;
+}
+.cta:hover{transform:translateY(-1.5px);box-shadow:0 16px 36px rgba(0,255,190,.26);}
+.cta:active{transform:translateY(1px);}
+
+.context-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;}
+@media (max-width:900px){.context-grid{grid-template-columns:1fr;}}
+
+.context-block{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;}
+.context-block h3{margin:0 0 6px;font-weight:700;font-size:18px;color:#b7f5e7;}
+.context-block p,.context-list{margin:0 0 8px;color:#d9fff6;line-height:1.6;}
+.context-list{padding-left:18px;}
+/* Estilo para la nueva tabla de datos */
+.data-table{
+    width:100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.data-table td{
+    padding: 6px 0;
+    font-size: 15px;
+    border-bottom: 1px dashed rgba(255,255,255,.05);
+}
+.data-table td:first-child{
+    font-weight: 700;
+    color: var(--brand);
+    width: 60%; /* Ajusta el ancho para el nombre del dato */
+}
+.data-table td:last-child{
+    text-align: right;
+    color: var(--ink-soft);
+}
+.data-table tr:last-child td{
+    border-bottom: none;
+}
+/* Fin de estilo para tabla */
+
+.pic16x9{width:100%;max-width:480px;margin:10px auto 0;border-radius:12px;overflow:hidden;aspect-ratio:16/9;background:#0d4039;box-shadow:0 0 20px rgba(0,255,190,.15);}
+.pic16x9 img{width:100%;height:100%;object-fit:cover;display:block;}
+
+/* Nuevo estilo para las imágenes de comparación */
+.comp-img-container {
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    text-align: center;
+}
+.comp-img-container img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+.comp-img-container span {
+    display: block;
+    color: var(--ink-soft);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+.slider-wrap{padding:10px 8px 0;}
+.years,.ticks{
+  user-select:none;color:#bfeee3;font-size:11.5px;
+  display:grid;
+  padding:0 calc(var(--thumb) / 2);
+}
+/* CAMBIO: Define 18 columnas para que los años y los meses usen la misma base */
+.years{
+  grid-template-columns: repeat(18, 1fr);
+  margin-bottom:2px;
+}
+.years span{
+  /* CAMBIO: Un año abarca 3 meses/ticks, así se centra sobre el trienio */
+  grid-column: span 3;
+  justify-self:center;
+  text-align:center;
+}
+
+.ticks{
+  grid-template-columns:repeat(18,1fr);
+}
+.ticks span{
+  justify-self:center;
+  text-align:center;
+}
+
+.slider{
+  width:100%;appearance:none;height:6px;border-radius:6px;
+  background:linear-gradient(90deg,#59d3c3,#7ae3b1);
+  outline:none;margin:10px calc(var(--thumb)/2) 6px;
+}
+.slider::-webkit-slider-thumb,.slider::-moz-range-thumb{
+  width:var(--thumb);height:var(--thumb);border-radius:50%;
+  background:#e0fff6;border:2px solid #0a6b60;cursor:pointer;
+  box-shadow:0 0 0 4px rgba(10,107,96,.25);
+}
+.photo{
+  width:100%;aspect-ratio:16/9;border-radius:14px;margin-top:16px;
+  display:flex;align-items:center;justify-content:center;
+  background:#e0f7f4;color:#013a36;font-weight:800;text-align:center;font-size:clamp(16px,2.2vw,20px);
+}
+.panel{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+textarea{
+  width:100%;height:120px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+  background:#06282a;color:#aaf4df;padding:10px;font-family:var(--mono);
+}
+/* Nuevo estilo para el footer */
+.footer{
+    max-width:960px;margin:30px auto 0;padding:20px 20px 40px;
+    color:#9de8d7;font-size:12px;text-align:center;border-top:1px solid rgba(255,255,255,.05);
+}
+.footer a{color:#a3f0e1;text-decoration:none;font-weight:bold;}
+
+/* Estilos para el nuevo medidor de presa */
+.gauge-section{
+  margin-top:20px;
+  padding:16px;
+  border-radius:14px;
+  background:rgba(5,30,40,.6); 
+}
+.gauge-title{
+  margin:0 0 10px;
+  font-weight:700;
+  font-size:18px;
+  color:#b7f5e7;
+  text-align:center;
+}
+.gauge-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px 0;
+}
+.donut-chart{
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  background:conic-gradient(var(--brand) 0%, var(--brand) 0%, rgba(255,255,255,.15) 0%);
+  display:grid;
+  place-items:center;
+  transition:background 0.5s ease-out;
+}
+.donut-inner{
+  width:110px;
+  height:110px;
+  background:#0b3b32; /* Color de fondo del body */
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center; /* Centrado vertical */
+  align-items:center; /* Centrado horizontal */
+  font-size:24px;
+  font-weight:700;
+  color:var(--brand);
+}
+.donut-label{
+    font-size:12px;
+    font-weight:400;
+    color:var(--ink-soft);
+}
+</style>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<script src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.9.1/dist/webllm.min.js"></script>
+
+<style>
+  /* Estilos del chat (aislados) */
+  .chat-fab{position:fixed;right:18px;bottom:18px;width:auto;padding:0 16px;height:48px;border-radius:9999px;background:#22d3ee;color:#0b1020;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,.3);border:none;cursor:pointer;font-weight:700;z-index:9999}
+  .chat-panel{position:fixed;right:18px;bottom:86px;width:340px;max-height:70vh;background:#0f172a;color:#e2e8f0;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.5);display:none;flex-direction:column;overflow:hidden;border:1px solid #1f2937;z-index:9999}
+  .chat-header{padding:10px 14px;border-bottom:1px solid #1f2937;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.02)}
+  .chat-dot{width:10px;height:10px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.2) inset}
+  .chat-dot.ready{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2) inset}
+  .chat-title{font-size:14px;font-weight:700}
+  .chat-sub{font-size:11px;color:#94a3b8}
+  .chat-scroll{padding:14px;overflow:auto;display:flex;flex-direction:column;gap:10px;background:rgba(0,0,0,.15)}
+  .chat-msg{padding:10px 12px;border-radius:10px;max-width:85%;line-height:1.4;font-size:14px;white-space:pre-wrap}
+  .chat-me{background:#1f2937;align-self:flex-end}
+  .chat-ai{background:#0b1224;border:1px solid #1f2937}
+  .chat-progress{font-size:12px;color:#94a3b8;padding:0 14px 10px}
+  .chat-input{display:flex;gap:8px;padding:12px;border-top:1px solid #1f2937;background:#0b1224}
+  .chat-input input{flex:1;background:#0b1020;color:#e2e8f0;border:1px solid #1f2937;border-radius:10px;padding:10px;font-family:inherit}
+  .chat-input button{background:#22d3ee;color:#08101d;border:none;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
+  .chat-small{font-size:11px;color:#94a3b8;padding:0 14px 12px}
+  @media (max-width:420px){.chat-panel{right:10px;left:10px;width:auto}}
+</style>
+
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-inner">
+      <h1 class="brand">SADAR&nbsp;</h1>
+      <p class="tag">Entre el Cuchillo y la Sequía: un instrumento para la resiliencia hídrica de presas usando radares sintéticos de apertura. </p>
+      <a href="#comparativa-visual" class="cta">Ver Comparativa Visual →</a>
+      <a href="#contexto" class="cta" style="background:none; border:1px solid #7ae3b1; color:#7ae3b1; box-shadow:none;">Contexto ↓</a>
+    </div>
+  </section>
+  <div id="contexto" class="wrap">
+    <section class="card">
+      <h2 class="section-title">"El día que Monterrey llegó a su día cero."</h2>
+      <div class="context-grid">
+        <div class="context-block">
+          <h3>Sequías en Monterrey y monitoreo con SAR</h3>
+          <p>El investigador José Antonio Ordoñez Díaz del Tecnológico de Monterrey y la UNAM introduce el concepto del Día Cero, un punto donde la población vive la escasez de agua por la sobreexplotación y falta de gestión. No es novedad que en el motor industrial de México surjan problemáticas relacionadas con la concesión de agua a empresas privadas, las cuales extraen hasta 1,600 litros por segundo, de acuerdo con datos de la SEDEMA y CONAGUA.</p>
+          <p>Asimismo, se destaca la percepción errónea de que toda el agua se destina al consumo humano, cuando en realidad este recurso es compartido con el ecosistema, del cual también dependen las actividades agrícolas, pecuarias e industriales. Ante este panorama, resulta imperativo fortalecer la gestión y administración del agua, especialmente en sectores productivos, a fin de garantizar un uso sostenible y equitativo del recurso.</p>
+          <p><em>“Una refresquera consume en un año lo que las personas consumen en 10 años. Y una cervecera más”.</em></p>
+          <div class="pic16x9"><img src="presa_elcuchillo.jpg" alt="Presa El Cuchillo" /></div>
+        </div>
+        <div class="context-block">
+          <h3>¿Falta agua, o sobran malas decisiones?</h3>
+          <p>Los investigadores Dávila y Velázquez señalan que diversos medios y autoridades atribuyen el desabastecimiento de agua a la escasa precipitación con el objetivo de eludir la responsabilidad de una mala gestión hídrica.</p>
+      
+          <p>La red de abastecimiento de agua en la Zona Metropolitana de Monterrey tiene pérdidas del 30% debido a fugas y conexiones ilegales (Aguilar Benítez y Monforte, 2018).</p>
+          <p>La CONAGUA reveló que existen 64 concesiones de agua para empresas en Monterrey, lo cual equivale a 1600 litros por segundo (Tapia Cervantes, 2022).</p>
+        
+          <div style="text-align:center; margin-top:16px;">
+            <a href="#porque-sar" 
+                class="cta" 
+                style="background:none; border:1px solid #7ae3b1; color:#7ae3b1; box-shadow:none; padding:10px 18px; font-size:14px; display:inline-block;">
+              Ver por qué usar SAR ↓
+            </a>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+  </div>
+  <div id="porque-sar" class="context-block" style="max-width:960px;margin:16px auto">
+    <h3 style="text-align:center;">¿Por qué usar SAR?</h3> 
+    <p>El radar de apertura sintética (SAR) es un método de recopilación de data con el que se usa un pulso energético enviado hacia la tierra para que sea después reflejado y capturado por un satélite.</p>
+    <ul class="context-list">
+      <li>Cuanto más larga sea la longitud de onda, mayor será la resolución espacial de la imagen. </li>
+      <li>Las diferentes bandas de onda se usan para mapear diferentes tipos de vegetación.</li>
+      <li>Existen diferentes misiones de satélites que usan esta técnica para obtener información, incluyendo el Sentinel-1.</li>
+    </ul>
+    <p>El uso de imágenes SAR no depende de la luz solar ni de las condiciones atmosféricas, operando día y noche, incluso bajo nubosidad. El radar es sensible a la textura: por ejemplo, las áreas de agua (lisas) aparecen oscuras, mientras que el terreno seco y la vegetación (texturados) aparecen brillantes. Misiones como Sentinel-1 permiten crear series temporales para analizar la variación de cuerpos de agua, esencial para detectar cambios en presas durante sequías o lluvias intensas (Vickers et al., 2019). <strong>Fuente de imágenes SAR<strong>: <a href="https://search.asf.alaska.edu/#/?polygon=POLYGON((-99.4159%2025.5266,-99.2405%2025.5266,-99.2405%2025.7404,-99.4159%2025.7404,-99.4159%2025.5266))&start=2019-02-01T06:00:00Z&end=2020-12-01T05:59:59Z&resultsLoaded=true&granule=S1A_IW_GRDH_1SDV_20201115T004206_20201115T004231_035252_041DE8_7CFE-GRD_HD&zoom=8.981&center=-100.010,25.075&searchType=Geographic%20Search&dataset=SENTINEL-1&productTypes=GRD_HD,OCN" target="_blank">ASF Data Search / Misión Sentinel-1</a>.</p>
+  </div>
+
+  <div class="context-block" style="max-width:960px;margin:16px auto">
+    <h3 style="text-align:center;">Presa El Cuchillo: Datos Clave</h3>
+    <table class="data-table">
+        <tr>
+            <td>Propósito Principal</td>
+            <td>Abastecimiento de agua potable para Monterrey</td>
+        </tr>
+        <tr>
+            <td>Río</td>
+            <td>San Juan</td>
+        </tr>
+        <tr>
+            <td>Año de Terminación</td>
+            <td>1994</td>
+        </tr>
+        <tr>
+            <td>Capacidad Máxima</td>
+            <td>~1,123 Mm³</td>
+        </tr>
+        <tr>
+            <td>Superficie Total (NAMOS)</td>
+            <td>>16,000 Hectáreas</td>
+        </tr>
+        <tr>
+            <td>Capacidad Hidroeléctrica</td>
+            <td>35 MW</td>
+        </tr>
+        <tr>
+            <td>Función</td>
+            <td>Fuente esencial de agua para la metrópoli</td>
+        </tr>
+    </table>
+    <p style="text-align:center; margin-top:10px; font-size:13px; color:#a3f0e1;">
+      Fuente: Comisión Nacional del Agua (CONAGUA), 2024.
+    </p>     
+  </div>
+  
+
+    <div id="comparativa-visual" class="context-block" style="max-width:960px;margin:16px auto">
+    <h3 style="text-align:center;">La Presa Antes vs. Después</h3>
+    <div class="context-grid" style="grid-template-columns:1fr 1fr; gap:20px;">
+      <div class="comp-img-container">
+        <img src="presa_full.jpg" alt="Nivel Alto (Gómez, 2022)" />
+        <span>Nivel Alto (Gómez, 2022)</span>
+      </div>
+      <div class="comp-img-container">
+        <img src="presa_vacia.png" alt="Nivel Crítico (Román, 2024)" />
+        <span>Nivel Crítico (Román, 2024)</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="explorar" class="wrap">
+    <section class="card">
+      <h2 class="section-title">Línea de Tiempo</h2>
+      <div class="slider-wrap">
+        <div class="years" id="years"></div>
+        <input id="scrubber" class="slider" type="range" min="0" max="17" step="0.001" value="0" />
+        <div class="ticks" id="ticks"></div>
+      </div>
+      <div id="photoBox" class="photo">Cargando…</div>
+      <div class="panel">
+        <div><div>Condiciones climáticas</div><textarea id="wx" readonly></textarea></div>
+        <div><div>Contexto</div><textarea id="ctx" readonly></textarea></div>
+      </div>
+
+      <div class="gauge-section">
+        <h3 class="gauge-title">Nivel de la Presa El Cuchillo</h3>
+        <div class="gauge-container">
+          <div id="donut" class="donut-chart">
+            <div class="donut-inner">
+              <span id="percent-value">0%</span>
+              <span class="donut-label">Capacidad</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <p>
+      Desarrollado por Regio Instruments.
+      Datos Climáticos: <a href="#">CONAGUA/SMN</a>. 
+      Imágenes Satelitales SAR: <a href="https://www.esa.int/" target="_blank">ESA / Copernicus Sentinel-1</a>.
+      Todos los derechos reservados &copy; 2025.
+    </p>
+  </footer>
+
+  <script>
+    (() => {
+      const D = [
+        /* [0:Fecha, 1:Imagen, 2:Temp (°C), 3:Precipitación (mm), 4:Evaporación, 5:Contexto, 6:Capacidad (%)] */
+        ["2 de febrero del 2019","2019-02-18-VH.png",17,1.03,106.6,"Finales de invierno; suelos fríos.", 77.48],
+        ["17 de agosto del 2019","2019-08-17-VH.png",32.7,7.5,284.17,"Verano cálido; alta demanda hídrica.", 68.75],
+        ["21 de noviembre del 2019","2019-11-21-VH FINAL.png",17.9,44.52,82.92,"Transición otoñal; lluvias frecuentes.", 78],
+        ["15 de febrero del 2020","2020-02-15-VH.png",16.8,0.02,100.92,"Invierno húmedo; posibles nevadas.", 64.20],
+        ["13 de agosto del 2020","2020-08-13-VH.png",30.5,5,227.83,"Verano persistente; tormentas aisladas.", 90.14],
+        ["15 de noviembre del 2020","2020-11-15-VH.png",22.4,0,114.38,"Otoño lluvioso; suelos saturados.", 99.52],
+        ["19 de febrero del 2021","2021-02-19-VH.png",15.5,5.1,80.25,"Invierno frío; heladas matinales.", 56.65],
+        ["18 de agosto del 2021","2021-08-18-VH.png",31.2,70.6,231,"Verano estable; olas de calor.", 56.43],
+        ["12 de noviembre del 2021","2021-11-12-VH.png",20.4,81.5,88.48,"Otoño ventoso con frentes del oeste.", 56.22],
+        ["14 de febrero del 2022","2022-02-14.png",14.2,11.53,74.88,"Invierno tardío; nieblas y heladas débiles.", 53.54],
+        ["15 de agosto del 2022","2022-08-15-VHF.png",31.4,55.7,232.05,"Verano muy cálido; estrés térmico.", 39.85],
+        ["15 de noviembre del 2022","2022-11-15-VH FINAL.png",18.4,36.6,75.26,"Otoño húmedo; riesgo de crecidas.", 67.7],
+        ["11 de febrero del 2023","2023-02-11 VH.png",19.6,0.01,105.22,"Invierno suave; lluvia intermitente.", 47.18],
+        ["10 de agosto del 2023","2023-08-10.png",32.3,58.22,251.44,"Verano con anomalías cálidas.", 45.66],
+        ["14 de noviembre del 2023","2023-11-14 VH.png",18.2,105.48,63.03,"Otoño activo; ráfagas puntuales.", 42.76],
+        ["16 de febrero del 2024","2024-02-16.png",19.4,29.5,101.89,"Invierno tardío; baja evapotranspiración.", 41.54],
+        ["14 de agosto del 2024","2024-08-14-VH.png",31,7.51,195.67,"Verano cálido persistente.", 89.21],
+        ["18 de noviembre del 2024","2024-11-18.png",22.7,5,79.82,"Otoño lluvioso; riesgo de inundaciones.", 104.44],
+      ];
+
+      const Y = document.getElementById("years"),
+            T = document.getElementById("ticks"),
+            S = document.getElementById("scrubber"),
+            P = document.getElementById("photoBox"),
+            W = document.getElementById("wx"),
+            C = document.getElementById("ctx");
+
+      const DNT = document.getElementById("donut");
+      const PV  = document.getElementById("percent-value");
+
+      const yearsData = [2019,2020,2021,2022,2023,2024];
+      yearsData.forEach(y => {
+        const span = document.createElement("span");
+        span.textContent = y;
+        Y.appendChild(span);
+      });
+
+      Array.from({length:18},(_,i)=>["Feb","Ago","Nov"][i%3])
+        .forEach(m => T.appendChild(Object.assign(document.createElement("span"), { textContent:m })));
+
+      const I = s => /\.(png|jpe?g|webp|gif|bmp)$/i.test(s) || /^https?:\/\//.test(s);
+      const K = (n,min,max) => Math.max(min, Math.min(max, n));
+      const CtoD = p => p * 3.6; // % a grados
+
+      function updateGauge(percentage){
+        const angle = K(CtoD(percentage), 0, 360);
+        DNT.style.background = `conic-gradient(var(--brand) 0deg ${angle}deg, rgba(255,255,255,.15) ${angle}deg 360deg)`;
+        PV.textContent = `${percentage.toFixed(1)}%`;
+      }
+
+      function show(i){
+        const A = D[K(i, 0, D.length-1)];
+        const [F, src, t, pp, v, txt, percentage] = A;
+
+        if (I(src)){
+          P.innerHTML = `<img src="${src}" alt="${F}" style="width:100%;height:100%;object-fit:cover;border-radius:14px">`;
+          P.style.background = "";
+        } else {
+          P.innerHTML = "";
+          P.style.background = src;
+          P.textContent = `Foto ${i+1} • ${F}`;
+        }
+
+        W.value = `Fecha: ${F}\nTemperatura Promedio: ${t}°C\nPrecipitación: ${pp}mm\nEvaporación: ${v}mm`;
+        C.value = txt;
+
+        updateGauge(percentage);
+      }
+
+      S.addEventListener("input", e => show(Math.round(+e.target.value)));
+      show(Math.round(+S.value));
+    })();
+  </script>
+
+  <button id="chat-fab" class="chat-fab" title="Asistente Virtual" style="z-index:9999">Asistente Virtual</button>
+
+  <section id="chat" class="chat-panel" aria-live="polite">
+    <div class="chat-header">
+      <div id="chat-status-dot" class="chat-dot" aria-hidden="true"></div>
+      <div>
+        <div class="chat-title">Asistente Virtual (local)</div>
+        <div id="chat-status-text" class="chat-sub">Inicializando modelo…</div>
+      </div>
+    </div>
+    <div id="chat-progress" class="chat-progress">Descargando modelo (primera vez puede tardar). No usa servidor.</div>
+    <div id="chat-scroll" class="chat-scroll"></div>
+    <div class="chat-small">Tip: pregunta sobre tu app, sequía NL, SAR, etc.</div>
+    <div class="chat-input">
+      <input id="chat-inp" placeholder="Escribe y presiona Enter…" />
+      <button id="chat-send">Enviar</button>
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const panel = $("chat");
+      const fab   = $("chat-fab");
+      const scrollBox = $("chat-scroll");
+      const inp   = $("chat-inp");
+      const sendBtn = $("chat-send");
+      const dot   = $("chat-status-dot");
+      const st    = $("chat-status-text");
+      const prog  = $("chat-progress");
+
+      let engine = null, ready = false;
+
+      const history = [
+        { role: 'system', content: 'Eres un asistente breve y útil para una app sobre sequía en Nuevo León. Si no sabes un dato, dilo claramente.' }
+      ];
+
+      // abrir/cerrar panel
+      fab.addEventListener('click', () => {
+        panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
+        if (panel.style.display === 'flex') inp.focus();
+      });
+
+      function addMsg(text, who = 'chat-ai') {
+        const div = document.createElement('div');
+        div.className = `chat-msg ${who}`;
+        div.textContent = text;
+        scrollBox.appendChild(div);
+        scrollBox.scrollTop = scrollBox.scrollHeight;
+      }
+
+      async function ask(text) {
+        if (!ready) { addMsg('Aún cargando el modelo o no disponible. Revisa el estado arriba.'); return; }
+        addMsg(text, 'chat-me');
+        inp.value = '';
+
+        const thinking = document.createElement('div');
+        thinking.className = 'chat-msg chat-ai';
+        thinking.textContent = '…';
+        scrollBox.appendChild(thinking);
+        scrollBox.scrollTop = scrollBox.scrollHeight;
+
+        history.push({ role:'user', content: text });
+        try {
+          const reply = await engine.chat.completions.create({
+            messages: history, temperature: 0.7, max_tokens: 256,
+          });
+          const content = reply.choices?.[0]?.message?.content || '(sin respuesta)';
+          thinking.remove();
+          addMsg(content, 'chat-ai');
+          history.push({ role:'assistant', content });
+        } catch (e) {
+          thinking.remove();
+          addMsg('Error generando respuesta: ' + e);
+          console.error(e);
+        }
+      }
+
+      sendBtn.addEventListener('click', () => { const v = inp.value.trim(); if (v) ask(v); });
+      inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') { const v = inp.value.trim(); if (v) ask(v); }});
+
+      // Comprobaciones
+      if (typeof window.webllm === 'undefined') {
+        st.textContent = 'WebLLM no cargó';
+        prog.textContent = 'Asegura el <script> de @mlc-ai/web-llm@0.9.1 en el <head> (sin duplicados).';
+        panel.style.display = 'flex';
+        return;
+      }
+      if (!('gpu' in navigator)) {
+        st.textContent = 'WebGPU no disponible';
+        prog.textContent = 'Usa Chrome/Edge con HTTPS o http://localhost. Puedes activar chrome://flags/#enable-unsafe-webgpu.';
+        panel.style.display = 'flex';
+      }
+
+      // Inicializa el motor (TinyLlama)
+      (async () => {
+        try {
+          const model = 'TinyLlama-1.1B-Chat-v1.0-q4f16_1';
+          
+          // CONFIGURACIÓN CORREGIDA PARA QUE WEBLLEM ENCUENTRE LOS ARCHIVOS DEL MODELO
+          const config = {
+            model_list: [
+              { 
+                "model_url": "https://huggingface.co/mlc-ai/TinyLlama-1.1B-Chat-v1.0-q4f16_1-webgpu/resolve/main/",
+                "model_id": model,
+                "model_lib_url": "https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.9.1/dist/TinyLlama-1.1B-Chat-v1.0-q4f16_1-webgpu-cli.wasm",
+                "vram_required_mb": 1133.02,
+                "low_req": true 
+              }
+            ],
+            model_list_url: "no-op"
+          };
+
+          const opts = { 
+            initProgressCallback: (p) => { if (p && p.text) prog.textContent = p.text; },
+            engineConfig: config // Pasamos la configuración aquí
+          };
+
+          engine = await webllm.CreateMLCEngine(model, opts);
+          
+          ready = true;
+          dot.classList.add('ready');
+          st.textContent = 'Listo (modelo local)';
+          prog.textContent = 'Modelo cargado. Pregunta lo que quieras.';
+        } catch (e) {
+          dot.classList.remove('ready');
+          st.textContent = 'Error al iniciar la IA';
+          prog.textContent = String(e);
+          panel.style.display = 'flex';
+          console.error(e);
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>
